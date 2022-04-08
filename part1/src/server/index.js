@@ -1,26 +1,14 @@
 // server/index.js
-import express from 'express';
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import Home from '../containers/Home';
+import express from "express";
+import { render } from "./utils";
 
 const app = express();
-const content = renderToString(<Home />);
-app.get('/', function (req, res) {
-   res.send(
-   `
-    <html>
-      <head>
-        <title>ssr</title>
-      </head>
-      <body>
-        <div id="root">${content}</div>
-      </body>
-    </html>
-   `
-   );
-})
+app.use(express.static("public"));
+//注意这里要换成*来匹配
+app.get("*", function (req, res) {
+  res.send(render(req));
+});
 
 app.listen(3001, () => {
- console.log('listen at http://localhost:3001')
-})
+  console.log("listen at http://localhost:3001");
+});
